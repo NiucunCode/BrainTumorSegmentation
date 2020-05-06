@@ -122,7 +122,7 @@ def uNet_test():
     """
     unet = uNet(class_num=2)
     unet.apply(weights_init_normal)
-    input = torch.ones(3,1,240,240)
+    input = torch.ones(3, 1, 240, 240)
     # input = torch.randn(3, 1, 240, 240)
     output = unet(input)
     print(output.size())

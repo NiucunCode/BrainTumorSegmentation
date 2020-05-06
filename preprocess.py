@@ -16,8 +16,14 @@ MRI labels:
         1: Necrotic and non-enhancing tumor;
         2: Edema;
         3: Enhancing tumor;
+
+Data prediction type:
+    complete: Edema and tumor (label 1, 2, 3);
+    core: Necrotic, non-enhancing and enhancing tumor (label 1, 3);
+    enhancing: Enhancing tumor (label 3);
 """
 import os
+import glob
 import argparse
 
 import cv2
@@ -122,8 +128,10 @@ if __name__ == '__main__':
     except:
         pass
 
-    for path in tqdm(os.listdir(args.image_root)):
-        nii2jpg_img(os.path.join(args.image_root, path), img_output_root, args.channel)
+    img_path = sorted(glob.glob(os.path.join(args.image_root + '/*.gz')))
+    for path in tqdm(img_path):
+        nii2jpg_img(path, img_output_root, args.channel)
 
-    for path in tqdm(os.listdir(args.label_root)):
-        nii2jpg_label(os.path.join(args.label_root, path), label_output_root, args.space)
+    label_path = sorted(glob.glob(os.path.join(args.label_root + '/*.gz')))
+    for path in tqdm(label_path):
+        nii2jpg_label(path, label_output_root, args.space)
