@@ -105,29 +105,37 @@ if __name__ == '__main__':
     parser.add_argument("--channel", type=int, default=0, help="MRI images types.")
     parser.add_argument("--space", type=int, default=50, help="Space to distinguish labels.")
     parser.add_argument("--image_root", type=str, default='Task01_BrainTumor/imagesTr',
-                        help="The root of dataset image.")
+                        help="The root of training dataset image.")
     parser.add_argument("--label_root", type=str, default='Task01_BrainTumor/labelsTr',
-                        help="The root of dataset label.")
+                        help="The root of training dataset label.")
+    parser.add_argument("--test_image_root", type=str, default='Task01_BrainTumor/imagesTs',
+                        help="The root of test dataset image.")
     args = parser.parse_args()
 
     label_output_root = 'train/label'
     if args.channel == 0:
         img_output_root = 'train/image_FLAIR'
+        test_img_output_root = 'test/image_FLAIR'
     elif args.channel == 1:
         img_output_root = 'train/image_T1'
+        test_img_output_root = 'test/image_T1'
     elif args.channel == 2:
         img_output_root = 'train/image_T1c'
+        test_img_output_root = 'test/image_T1c'
     elif args.channel == 3:
         img_output_root = 'train/image_T2'
+        test_img_output_root = 'test/image_T2'
     else:
         raise ValueError('Invalid channel!', args.channel)
 
     try:
         os.makedirs(img_output_root, exist_ok=True)
+        os.makedirs(test_img_output_root, exist_ok=True)
         os.makedirs(label_output_root, exist_ok=True)
     except:
         pass
 
+    # build training data
     img_path = sorted(glob.glob(os.path.join(args.image_root + '/*.gz')))
     for path in tqdm(img_path):
         nii2jpg_img(path, img_output_root, args.channel)
@@ -135,3 +143,8 @@ if __name__ == '__main__':
     label_path = sorted(glob.glob(os.path.join(args.label_root + '/*.gz')))
     for path in tqdm(label_path):
         nii2jpg_label(path, label_output_root, args.space)
+
+    # build test data
+    test_img_path = sorted(glob.glob(os.path.join(args.test_image_root + '/*.gz')))
+    for path in tqdm(test_img_path):
+        nii2jpg_img(path, test_img_output_root, args.channel)
