@@ -75,7 +75,6 @@ def nii2jpg_img(input, output, channel):
         filename = os.path.join(output, basename + '_' + str(i) + '.jpg')
         gray_img = img[:, :, i]
         cv2.imwrite(filename, gray_img)
-    # TODO: color
 
 
 def nii2jpg_label(input, output, space):
